@@ -7,15 +7,15 @@ class Scraper:
 
     def __init__(self, address):
         # initialize geolocator
-        geolocator = geopy.Nominatim(user_agent='my-application')
+        self.geolocator = geopy.Nominatim(user_agent='my-application')
 
         # initialize address
         self.address = address
 
         # determine if address is valid
-        if self.is_valid_address(geolocator):
+        if self.is_valid_address():
             # if address is valid get lat/long
-            self.location = geolocator.geocode(self.address, country_codes=['US'])
+            self.location = self.geolocator.geocode(self.address, country_codes=['US'])
             self.latitude = self.location.latitude
             self.longitude = self.location.longitude
         else:
@@ -61,11 +61,14 @@ class Scraper:
             return 'Error: Invalid Address'
 
     # determine if current address is valid
-    def is_valid_address(self, geo):
-        try:
-            self.location = geo.geocode(self.address, country_codes=['US'])
-            self.latitude = self.location.latitude
-            self.longitude = self.location.longitude
-        except AttributeError:
+    def is_valid_address(self):
+        if self.address is not None:
+            try:
+                self.location = self.geolocator.geocode(self.address, country_codes=['US'])
+                self.latitude = self.location.latitude
+                self.longitude = self.location.longitude
+            except AttributeError:
+                return False
+            return True
+        else:
             return False
-        return True

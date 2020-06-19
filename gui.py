@@ -53,18 +53,22 @@ class Gui:
         self.clear_canvas()
 
         # set up scraper
-        self.scraper = Scraper(self.address)
+        self.web_scraper = Scraper(self.address)
 
         # create text objects to display location and weather
-        self.location_text = self.canvas.create_text(500, 100, text=self.scraper.get_location())
-        if self.scraper.get_location() != 'Error: Invalid Address':
-            self.forecast_text = self.canvas.create_text(500, 115, text=self.scraper.get_forecast())
-            self.temp_c_text = self.canvas.create_text(500, 130, text=self.scraper.get_temp_f())
-            self.temp_f_text = self.canvas.create_text(500, 145, text=self.scraper.get_temp_c())
+        self.location_text = self.canvas.create_text(500, 100, text=self.web_scraper.get_location())
+        if self.web_scraper.get_location() != 'Error: Invalid Address':
+            self.forecast_text = self.canvas.create_text(500, 115, text=self.web_scraper.get_forecast())
+            self.temp_c_text = self.canvas.create_text(500, 130, text=self.web_scraper.get_temp_f())
+            self.temp_f_text = self.canvas.create_text(500, 145, text=self.web_scraper.get_temp_c())
 
         # initialize reset button
-        self.init_reset_button = tk.Button(self.canvas, text='Reset Slot', bg='white', command=self.init_entry_ui)
-        self.init_reset_button.place(width=300, height=100, x=350, y=300)
+        self.reset_button = tk.Button(self.canvas, text='Reset Slot', bg='white', command=self.init_entry_ui)
+        self.reset_button.place(width=300, height=100, x=175, y=300)
+
+        #initialize refresh button
+        self.refresh_button = tk.Button(self.canvas, text='Refresh Forecast', bg='white', command=self.refresh_weather)
+        self.refresh_button.place(width=300, height=100, x=525, y=300)
 
     # clear canvas
     def clear_canvas(self):
@@ -86,3 +90,12 @@ class Gui:
             self.canvas.delete(self.prompt_text)
         except AttributeError:
             pass
+
+    #refresh weather screen
+    def refresh_weather(self):
+        self.clear_canvas()
+        self.init_weather_ui()
+
+    #get address function
+    def get_address(self):
+        return self.address
